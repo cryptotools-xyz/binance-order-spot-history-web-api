@@ -40,7 +40,7 @@ class BinanceController extends Controller
         return implode('&', $query_array);
     }
 
-    public function index($symbol)
+    public function myTrades($symbol)
     {
         $publicKey = $this->binance_api_key;
         $secretKey = $this->binance_secret_key;
@@ -59,7 +59,7 @@ class BinanceController extends Controller
         return $data = $response->json();
     }
 
-    public function index2($symbol)
+    public function allOrders($symbol)
     {
         $publicKey = $this->binance_api_key;
         $secretKey = $this->binance_secret_key;
@@ -78,7 +78,7 @@ class BinanceController extends Controller
         return $data = $response->json();
     }
 
-    public function show($symbol, $orderId)
+    public function order($symbol, $orderId)
     {
         $publicKey = $this->binance_api_key;
         $secretKey = $this->binance_secret_key;
