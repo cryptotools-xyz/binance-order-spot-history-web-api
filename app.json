@@ -1,7 +1,20 @@
 {
     "name": "Binance Order History",
-    "description": "Get all your trades",
+    "description": "Get ALL your order history in a .json format",
     "repository": "https://github.com/souhailmerroun-poc/binance-order-history",
-    "logo": "",
-    "keywords": ["laravel"]
-  }
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/57/Binance_Logo.png",
+    "keywords": [
+        "laravel",
+        "php",
+        "binance"
+    ],
+    "env": {
+        "BINANCE_API_KEY": {
+            "description": "Your binance API KEY",
+            "generator": "secret"
+        },
+        "BINANCE_SECRET_KEY": {
+            "description": "Your binance secret key"
+        }
+    }
+}
