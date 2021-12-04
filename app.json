@@ -1,0 +1,30 @@
+{
+    "name": "Binance Order History",
+    "description": "Get ALL your order history in a .json format",
+    "repository": "https://github.com/souhailmerroun-poc/binance-order-history",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/5/57/Binance_Logo.png",
+    "keywords": [
+        "laravel",
+        "php",
+        "binance"
+    ],
+    "env": {
+        "APP_DEBUG": {
+            "description": "Enables or disables debug mode.",
+            "value": "true"    
+        },
+        "APP_ENV": {
+            "description": "Enables or disables debug mode.",
+            "value": "local"   
+        },
+        "APP_KEY": {
+            "description": "Please change this to a 32-character string. For example run `echo -n 'base64:'; openssl rand -base64 32` and copy/paste the value."
+        },
+        "BINANCE_API_KEY": {
+            "description": "Your binance API KEY"
+        },
+        "BINANCE_SECRET_KEY": {
+            "description": "Your binance secret key"
+        }
+    }
+}
