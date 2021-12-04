@@ -19,4 +19,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/all-orders', [BinanceController::class, 'index']);
+Route::get('/all-orders/{symbol}', [BinanceController::class, 'index']);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Http;
 use Exception;
 
 class BinanceController extends Controller
@@ -20,8 +21,41 @@ class BinanceController extends Controller
         }
     }
 
-    public function index()
+    private function signature($query_string, $secret) {
+        return hash_hmac('sha256', $query_string, $secret);
+    }
+
+    private function buildQuery(array $params)
     {
-        return response()->json(['Binance controller']);
+        $query_array = array();
+        foreach ($params as $key => $value) {
+            if (is_array($value)) {
+                $query_array = array_merge($query_array, array_map(function ($v) use ($key) {
+                    return urlencode($key) . '=' . urlencode($v);
+                }, $value));
+            } else {
+                $query_array[] = urlencode($key) . '=' . urlencode($value);
+            }
+        }
+        return implode('&', $query_array);
+    }
+
+    public function index($symbol)
+    {
+        $publicKey = $this->binance_api_key;
+        $secretKey = $this->binance_secret_key;
+
+        $timestamp = round(microtime(true) * 1000);
+
+        $parameters['symbol'] = $symbol;
+        $parameters['timestamp'] = $timestamp;
+        $query = $this->buildQuery($parameters);
+        $signature = $this->signature($query, $secretKey);
+
+        $response = Http::withHeaders([
+            'X-MBX-APIKEY' => $publicKey
+        ])->get("https://api.binance.com/api/v3/allOrders?symbol=$symbol&timestamp=$timestamp&signature=$signature");
+
+        return $data = $response->json();
     }
 }
