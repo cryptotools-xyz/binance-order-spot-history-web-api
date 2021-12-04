@@ -11,11 +11,11 @@
     "env": {
         "APP_DEBUG": {
             "description": "Enables or disables debug mode.",
-            "default": "true"    
+            "value": "true"    
         },
         "APP_ENV": {
             "description": "Enables or disables debug mode.",
-            "default": "development"   
+            "value": "local"   
         },
         "APP_KEY": {
             "description": "Please change this to a 32-character string. For example run `echo -n 'base64:'; openssl rand -base64 32` and copy/paste the value."
