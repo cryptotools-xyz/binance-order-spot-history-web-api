@@ -54,15 +54,32 @@ class BinanceController extends Controller
 
         $response = Http::withHeaders([
             'X-MBX-APIKEY' => $publicKey
+        ])->get("https://api.binance.com/api/v3/myTrades?symbol=$symbol&timestamp=$timestamp&signature=$signature");
+
+        return $data = $response->json();
+    }
+
+    public function index2($symbol)
+    {
+        $publicKey = $this->binance_api_key;
+        $secretKey = $this->binance_secret_key;
+
+        $timestamp = round(microtime(true) * 1000);
+
+        $parameters['symbol'] = $symbol;
+        $parameters['timestamp'] = $timestamp;
+        $query = $this->buildQuery($parameters);
+        $signature = $this->signature($query, $secretKey);
+
+        $response = Http::withHeaders([
+            'X-MBX-APIKEY' => $publicKey
         ])->get("https://api.binance.com/api/v3/allOrders?symbol=$symbol&timestamp=$timestamp&signature=$signature");
 
         return $data = $response->json();
     }
 
-    public function show($symbol)
+    public function show($symbol, $orderId)
     {
-        $orderId = 3981939897;
-
         $publicKey = $this->binance_api_key;
         $secretKey = $this->binance_secret_key;
 
