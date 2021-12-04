@@ -10,8 +10,7 @@
     ],
     "env": {
         "BINANCE_API_KEY": {
-            "description": "Your binance API KEY",
-            "generator": "secret"
+            "description": "Your binance API KEY"
         },
         "BINANCE_SECRET_KEY": {
             "description": "Your binance secret key"
