@@ -1,0 +1,7 @@
+{
+    "name": "Binance Order History",
+    "description": "Get all your trades",
+    "repository": "https://github.com/souhailmerroun-poc/binance-order-history",
+    "logo": "",
+    "keywords": ["laravel"]
+  }
