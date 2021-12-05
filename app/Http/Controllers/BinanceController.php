@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use App\Models\Binance\Trade;
+use App\Models\Binance\Order;
 use Http;
 use Exception;
 
@@ -40,6 +43,31 @@ class BinanceController extends Controller
         return implode('&', $query_array);
     }
 
+    public function index($symbol)
+    {
+        $tradesData = $this->myTrades($symbol);
+        
+        $trades = [];
+
+        foreach($tradesData as $item) {
+            $trade = new Trade();
+            $trade->fill($item);
+
+            $orderData = $this->order($trade->symbol, $trade->orderId);
+            
+            Log::info($orderData, ['symbol' => $trade->symbol, 'orderId' => $trade->orderId]);
+
+            $order = new Order();
+            $order->fill($orderData);
+            
+            $trade->setRelation('order', $order);
+
+            array_push($trades, $trade);
+        }
+
+        return view('mytrades', ['data' => $trades]);
+    }
+
     public function myTrades($symbol)
     {
         $publicKey = $this->binance_api_key;
@@ -56,7 +84,7 @@ class BinanceController extends Controller
             'X-MBX-APIKEY' => $publicKey
         ])->get("https://api.binance.com/api/v3/myTrades?symbol=$symbol&timestamp=$timestamp&signature=$signature");
 
-        return $data = $response->json();
+        return $response->json();
     }
 
     public function allOrders($symbol)
@@ -75,7 +103,7 @@ class BinanceController extends Controller
             'X-MBX-APIKEY' => $publicKey
         ])->get("https://api.binance.com/api/v3/allOrders?symbol=$symbol&timestamp=$timestamp&signature=$signature");
 
-        return $data = $response->json();
+        return $response->json();
     }
 
     public function order($symbol, $orderId)
@@ -95,6 +123,6 @@ class BinanceController extends Controller
             'X-MBX-APIKEY' => $publicKey
         ])->get("https://api.binance.com/api/v3/order?symbol=$symbol&timestamp=$timestamp&signature=$signature&orderId=$orderId");
 
-        return $data = $response->json();
+        return $response->json();
     }
 }
