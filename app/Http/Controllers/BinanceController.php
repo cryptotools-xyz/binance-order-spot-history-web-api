@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use App\Models\Binance\Trade;
+use App\Models\Binance\Order;
 use Http;
 use Exception;
 
@@ -42,13 +45,27 @@ class BinanceController extends Controller
 
     public function index($symbol)
     {
-        $response = $this->myTrades($symbol);
+        $tradesData = $this->myTrades($symbol);
         
-        if($response->failed()) {
-            return view('binance_error', ['response' => $response->json()]);
-        } 
+        $trades = [];
 
-        return view('mytrades', ['data' => $response->json()]);
+        foreach($tradesData as $item) {
+            $trade = new Trade();
+            $trade->fill($item);
+
+            $orderData = $this->order($trade->symbol, $trade->orderId);
+            
+            Log::info($orderData, ['symbol' => $trade->symbol, 'orderId' => $trade->orderId]);
+
+            $order = new Order();
+            $order->fill($orderData);
+            
+            $trade->setRelation('order', $order);
+
+            array_push($trades, $trade);
+        }
+
+        return view('mytrades', ['data' => $trades]);
     }
 
     public function myTrades($symbol)
@@ -67,7 +84,7 @@ class BinanceController extends Controller
             'X-MBX-APIKEY' => $publicKey
         ])->get("https://api.binance.com/api/v3/myTrades?symbol=$symbol&timestamp=$timestamp&signature=$signature");
 
-        return $response;
+        return $response->json();
     }
 
     public function allOrders($symbol)
@@ -86,7 +103,7 @@ class BinanceController extends Controller
             'X-MBX-APIKEY' => $publicKey
         ])->get("https://api.binance.com/api/v3/allOrders?symbol=$symbol&timestamp=$timestamp&signature=$signature");
 
-        return $response;
+        return $response->json();
     }
 
     public function order($symbol, $orderId)
@@ -106,6 +123,6 @@ class BinanceController extends Controller
             'X-MBX-APIKEY' => $publicKey
         ])->get("https://api.binance.com/api/v3/order?symbol=$symbol&timestamp=$timestamp&signature=$signature&orderId=$orderId");
 
-        return $response;
+        return $response->json();
     }
 }

@@ -16,6 +16,8 @@
                 <th>symbol</th>
                 <th>id</th>
                 <th>orderId</th>
+                <th>type</th>
+                <th>side</th>
                 <th>orderListId</th>
                 <th>price</th>
                 <th>qty</th>
@@ -31,19 +33,21 @@
         <tbody>
             @foreach($data as $item)
                 <tr>
-                    <td>{{ $item['symbol'] }}</td>
-                    <td>{{ $item['id'] }}</td>
-                    <td>{{ $item['orderId'] }}</td>
-                    <td>{{ $item['orderListId'] }}</td>
-                    <td>{{ $item['price'] }}</td>
-                    <td>{{ $item['qty'] }}</td>
-                    <td>{{ $item['quoteQty'] }}</td>
-                    <td>{{ $item['commission'] }}</td>
-                    <td>{{ $item['commissionAsset'] }}</td>
-                    <td><?= date('d M Y H:i:s', $item['time'] / 1000); ?></td>
-                    <td>{{ $item['isBuyer'] }}</td>
-                    <td>{{ $item['isMaker'] }}</td>
-                    <td>{{ $item['isBestMatch'] }}</td>
+                    <td>{{ $item->symbol }}</td>
+                    <td>{{ $item->id }}</td>
+                    <td>{{ $item->orderId }}</td>
+                    <td>{{ $item->order->type }}</td>
+                    <td>{{ $item->order->side }}</td>
+                    <td>{{ $item->orderListId }}</td>
+                    <td>{{ $item->price }}</td>
+                    <td>{{ $item->qty }}</td>
+                    <td>{{ $item->quoteQty }}</td>
+                    <td>{{ $item->commission }}</td>
+                    <td>{{ $item->commissionAsset }}</td>
+                    <td><?= date('d M Y H:i:s', $item->time / 1000); ?></td>
+                    <td>{{ $item->isBuyer }}</td>
+                    <td>{{ $item->isMaker }}</td>
+                    <td>{{ $item->isBestMatch }}</td>
                 </tr>
             @endforeach
         </tbody>
