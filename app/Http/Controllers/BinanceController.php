@@ -40,6 +40,17 @@ class BinanceController extends Controller
         return implode('&', $query_array);
     }
 
+    public function index($symbol)
+    {
+        $response = $this->myTrades($symbol);
+        
+        if($response->failed()) {
+            return view('binance_error', ['response' => $response->json()]);
+        } 
+
+        return view('mytrades', ['data' => $response->json()]);
+    }
+
     public function myTrades($symbol)
     {
         $publicKey = $this->binance_api_key;
@@ -56,7 +67,7 @@ class BinanceController extends Controller
             'X-MBX-APIKEY' => $publicKey
         ])->get("https://api.binance.com/api/v3/myTrades?symbol=$symbol&timestamp=$timestamp&signature=$signature");
 
-        return $data = $response->json();
+        return $response;
     }
 
     public function allOrders($symbol)
@@ -75,7 +86,7 @@ class BinanceController extends Controller
             'X-MBX-APIKEY' => $publicKey
         ])->get("https://api.binance.com/api/v3/allOrders?symbol=$symbol&timestamp=$timestamp&signature=$signature");
 
-        return $data = $response->json();
+        return $response;
     }
 
     public function order($symbol, $orderId)
@@ -95,6 +106,6 @@ class BinanceController extends Controller
             'X-MBX-APIKEY' => $publicKey
         ])->get("https://api.binance.com/api/v3/order?symbol=$symbol&timestamp=$timestamp&signature=$signature&orderId=$orderId");
 
-        return $data = $response->json();
+        return $response;
     }
 }
