@@ -2,7 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BinanceController;
+use App\Http\Controllers\BinanceControllerMyTrades;
+use App\Http\Controllers\BinanceControllerAllOrders;
+use App\Http\Controllers\BinanceControllerOrder;
+use App\Http\Controllers\BinanceControllerMyTradesWithOrder;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +22,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/my-trades/{symbol}', [BinanceController::class, 'myTrades']);
-Route::get('/all-orders/{symbol}', [BinanceController::class, 'allOrders']);
-Route::get('/order/{symbol}/{orderId}', [BinanceController::class, 'order']);
+Route::get('/my-trades/{symbol}', [BinanceControllerMyTrades::class, 'index']);
+
+Route::get('/all-orders/{symbol}', [BinanceControllerAllOrders::class, 'index']);
+
+Route::get('/order/{symbol}/{orderId}', [BinanceControllerOrder::class, 'show']);
+
+Route::get('/my-trades/{symbol}/with-order', [BinanceControllerMyTradesWithOrder::class, 'index']);

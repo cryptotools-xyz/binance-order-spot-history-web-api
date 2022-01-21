@@ -2,11 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
-use App\Models\Binance\Trade;
-use App\Models\Binance\Order;
-use Http;
 use Exception;
 
 class BinanceController extends Controller
@@ -24,11 +19,11 @@ class BinanceController extends Controller
         }
     }
 
-    private function signature($query_string, $secret) {
+    protected function signature($query_string, $secret) {
         return hash_hmac('sha256', $query_string, $secret);
     }
 
-    private function buildQuery(array $params)
+    protected function buildQuery(array $params)
     {
         $query_array = array();
         foreach ($params as $key => $value) {
@@ -41,88 +36,5 @@ class BinanceController extends Controller
             }
         }
         return implode('&', $query_array);
-    }
-
-    public function index($symbol)
-    {
-        $tradesData = $this->myTrades($symbol);
-        
-        $trades = [];
-
-        foreach($tradesData as $item) {
-            $trade = new Trade();
-            $trade->fill($item);
-
-            $orderData = $this->order($trade->symbol, $trade->orderId);
-            
-            Log::info($orderData, ['symbol' => $trade->symbol, 'orderId' => $trade->orderId]);
-
-            $order = new Order();
-            $order->fill($orderData);
-            
-            $trade->setRelation('order', $order);
-
-            array_push($trades, $trade);
-        }
-
-        return view('mytrades', ['data' => $trades]);
-    }
-
-    public function myTrades($symbol)
-    {
-        $publicKey = $this->binance_api_key;
-        $secretKey = $this->binance_secret_key;
-
-        $timestamp = round(microtime(true) * 1000);
-
-        $parameters['symbol'] = $symbol;
-        $parameters['timestamp'] = $timestamp;
-        $query = $this->buildQuery($parameters);
-        $signature = $this->signature($query, $secretKey);
-
-        $response = Http::withHeaders([
-            'X-MBX-APIKEY' => $publicKey
-        ])->get("https://api.binance.com/api/v3/myTrades?symbol=$symbol&timestamp=$timestamp&signature=$signature");
-
-        return $response->json();
-    }
-
-    public function allOrders($symbol)
-    {
-        $publicKey = $this->binance_api_key;
-        $secretKey = $this->binance_secret_key;
-
-        $timestamp = round(microtime(true) * 1000);
-
-        $parameters['symbol'] = $symbol;
-        $parameters['timestamp'] = $timestamp;
-        $query = $this->buildQuery($parameters);
-        $signature = $this->signature($query, $secretKey);
-
-        $response = Http::withHeaders([
-            'X-MBX-APIKEY' => $publicKey
-        ])->get("https://api.binance.com/api/v3/allOrders?symbol=$symbol&timestamp=$timestamp&signature=$signature");
-
-        return $response->json();
-    }
-
-    public function order($symbol, $orderId)
-    {
-        $publicKey = $this->binance_api_key;
-        $secretKey = $this->binance_secret_key;
-
-        $timestamp = round(microtime(true) * 1000);
-
-        $parameters['symbol'] = $symbol;
-        $parameters['timestamp'] = $timestamp;
-        $parameters['orderId'] = $orderId;
-        $query = $this->buildQuery($parameters);
-        $signature = $this->signature($query, $secretKey);
-
-        $response = Http::withHeaders([
-            'X-MBX-APIKEY' => $publicKey
-        ])->get("https://api.binance.com/api/v3/order?symbol=$symbol&timestamp=$timestamp&signature=$signature&orderId=$orderId");
-
-        return $response->json();
     }
 }

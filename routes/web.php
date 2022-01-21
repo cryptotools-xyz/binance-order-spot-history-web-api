@@ -17,5 +17,3 @@ use App\Http\Controllers\BinanceController;
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('mytrades/{symbol}', [BinanceController::class, 'index']);
