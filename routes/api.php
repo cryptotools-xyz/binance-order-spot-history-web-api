@@ -6,6 +6,7 @@ use App\Http\Controllers\BinanceControllerAllOrders;
 use App\Http\Controllers\BinanceControllerOrder;
 use App\Http\Controllers\BinanceControllerMyTradesWithOrder;
 use App\Http\Controllers\BinanceControllerTickerPrice;
+use App\Http\Controllers\BinanceControllerMyTradesPerformance;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,3 +28,5 @@ Route::get('/order/{symbol}/{orderId}', [BinanceControllerOrder::class, 'show'])
 Route::get('/my-trades/{symbol}/with-order', [BinanceControllerMyTradesWithOrder::class, 'index']);
 
 Route::get('/ticker/price/{symbol}', [BinanceControllerTickerPrice::class, 'show']);
+
+Route::get('/my-trades-performance/{symbol}', [BinanceControllerMyTradesPerformance::class, 'index']);

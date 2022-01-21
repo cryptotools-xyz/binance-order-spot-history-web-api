@@ -15,4 +15,9 @@ class Trade extends Model
     {
         return $this->hasOne(Order::class);
     }
+
+    public function performance()
+    {
+        return $this->hasOne(Performance::class);
+    }
 }
