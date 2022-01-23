@@ -9,5 +9,5 @@ class Performance extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['buy_price', 'current_price', 'percentage_change'];
+    protected $fillable = ['cost', 'worth', 'profit', 'percentage_change'];
 }
