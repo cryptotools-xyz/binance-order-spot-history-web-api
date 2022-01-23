@@ -29,12 +29,13 @@ class BinanceControllerMyTradesPerformance extends BinanceController
             $trade->setRelation('order', $order);
 
             $performance = new Performance();
-            $buy_price = $trade->price * $trade->qty;
-            $current_price = $tickerPrice['price'] * $trade->qty;
-            $percentage_change = (($current_price - $buy_price) / $current_price) * 100;
+            $cost = $trade->price * $trade->qty;
+            $worth = $tickerPrice['price'] * $trade->qty;
+            $percentage_change = (($worth - $cost) / $worth) * 100;
             $performance->fill([
-                'buy_price' => $buy_price,
-                'current_price' => $current_price,
+                'cost' => $cost,
+                'worth' => $worth,
+                'profit' => $worth - $cost,
                 'percentage_change' => $percentage_change
             ]);
 
