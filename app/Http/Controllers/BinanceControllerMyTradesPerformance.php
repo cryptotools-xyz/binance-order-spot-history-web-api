@@ -30,6 +30,12 @@ class BinanceControllerMyTradesPerformance extends BinanceController
             
             $trade->setRelation('order', $order);
 
+            if($order->side === "BUY") {
+                $cumulative_qty = $cumulative_qty + floatval($trade->qty);
+            } else if($order->side === "SELL") {
+                $cumulative_qty = $cumulative_qty - floatval($trade->qty);
+            }
+
             $performance = new Performance();
             $cost = $trade->price * $trade->qty;
             $worth = $tickerPrice['price'] * $trade->qty;
@@ -39,7 +45,7 @@ class BinanceControllerMyTradesPerformance extends BinanceController
                 'worth' => $worth,
                 'profit' => $worth - $cost,
                 'percentage_change' => $percentage_change,
-                'cumulative_qty' => $cumulative_qty + $trade->qty
+                'cumulative_qty' => $cumulative_qty
             ]);
 
             $trade->setRelation('performance', $performance);
