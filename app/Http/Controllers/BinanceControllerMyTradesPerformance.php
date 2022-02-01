@@ -19,6 +19,8 @@ class BinanceControllerMyTradesPerformance extends BinanceController
 
         $trades = [];
 
+        $cumulative_qty = 0;
+
         foreach($tradesWithOrderDataArray as $item) {
             $trade = new Trade();
             $trade->fill($item);
@@ -36,7 +38,8 @@ class BinanceControllerMyTradesPerformance extends BinanceController
                 'cost' => $cost,
                 'worth' => $worth,
                 'profit' => $worth - $cost,
-                'percentage_change' => $percentage_change
+                'percentage_change' => $percentage_change,
+                'cumulative_qty' => $cumulative_qty + $trade->qty
             ]);
 
             $trade->setRelation('performance', $performance);
